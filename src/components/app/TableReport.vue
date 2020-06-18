@@ -30,6 +30,7 @@
 
 <script>
 import users from '../../data/users.json'
+import { commonAPIInstance } from '@/api/api'
 
 export default {
   data () {
@@ -40,16 +41,16 @@ export default {
   computed: {
     fields () {
       return [{
-        name: 'fullName',
+        name: 'title',
         title: this.$t('tables.headings.name'),
         sortField: 'fullName',
         width: '25%',
       }, {
-        name: 'email',
+        name: 'body',
         title: this.$t('tables.headings.email'),
         width: '30%',
       }, {
-        name: 'country',
+        name: 'id',
         title: this.$t('tables.headings.country'),
         sortField: 'country',
         width: '25%',
@@ -71,6 +72,17 @@ export default {
       const i = this.users.findIndex(user => user.id === id)
       this.users[i].starred = !this.users[i].starred
     },
+    getRawData () {
+      commonAPIInstance.get('posts')
+        .then(response => {
+          console.log(response.data)
+          const rawData = response.data
+          this.users = rawData
+        })
+    },
+  },
+  created () {
+    this.getRawData()
   },
 }
 </script>
