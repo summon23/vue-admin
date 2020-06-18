@@ -24,6 +24,11 @@ export default new Router({
           path: 'main',
           component: () => import('../components/app/TableReport.vue'),
         },
+        {
+          name: 'newdata',
+          path: 'newdata',
+          component: () => import('../components/app/FormReport.vue'),
+        },
       ],
     },
     {

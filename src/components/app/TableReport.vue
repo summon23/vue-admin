@@ -1,5 +1,9 @@
 <template>
   <va-card title="Data Report">
+    <router-link :to="{name: 'newdata'}">
+      <va-button class="ma-0 mb-2 mt-1" small>Add New Data</va-button>
+    </router-link>
+
     <va-data-table
       :fields="fields"
       :data="users"
@@ -33,6 +37,7 @@ import users from '../../data/users.json'
 import { commonAPIInstance } from '@/api/api'
 
 export default {
+  name: 'TableReport',
   data () {
     return {
       users: users.slice(0, 6),
