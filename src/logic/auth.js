@@ -1,13 +1,11 @@
 
 import { commonAPI } from '@/api/api'
 
-const API_URL = 'http://localhost:8888'
-
 const exports = {}
 
 exports.authUser = async (userdata) => {
   const { username, password } = userdata
-  return commonAPI.post(API_URL + '/user/login', { username, password })
+  return commonAPI.post('/user/login', { username, password })
     .then(response => {
       if (response.status === 200) {
         localStorage.setItem('user-token', response.data.token)
@@ -21,6 +19,8 @@ exports.authUser = async (userdata) => {
 exports.authHeader = () => {
   const userToken = localStorage.getItem('user-token')
   if (!userToken) return {}
+  console.log('SSSS')
+  console.log(userToken)
   return {
     'x-access-token': userToken,
   }
