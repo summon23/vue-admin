@@ -1,8 +1,8 @@
 <template>
   <form @submit.prevent="onsubmit">
     <va-input
-      v-model="email"
-      type="email"
+      v-model="username"
+      type="text"
       :label="$t('auth.email')"
       :error="!!emailErrors.length"
       :error-messages="emailErrors"
@@ -15,6 +15,8 @@
       :error="!!passwordErrors.length"
       :error-messages="passwordErrors"
     />
+
+    <span class="errormsg">{{message}}</span>
 
     <div class="auth-layout__options d-flex align--center justify--space-between">
       <va-checkbox v-model="keepLoggedIn" class="mb-0" :label="$t('auth.keep_logged_in')"/>
@@ -32,8 +34,9 @@ export default {
   name: 'login',
   data () {
     return {
-      email: '',
+      username: '',
       password: '',
+      message: '',
       keepLoggedIn: false,
       emailErrors: [],
       passwordErrors: [],
@@ -46,16 +49,29 @@ export default {
   },
   methods: {
     onsubmit () {
-      this.emailErrors = this.email ? [] : ['Email is required']
+      this.emailErrors = this.username ? [] : ['Email is required']
       this.passwordErrors = this.password ? [] : ['Password is required']
       if (!this.formReady) {
         return
       }
-      this.$router.push({ name: 'dashboard' })
+      const { username, password } = this
+      this.$store.dispatch('auth/login', { username, password })
+        .then((res) => {
+          console.log('login success')
+          console.log(res)
+          this.$router.push({ name: 'dashboard' })
+        }, err => {
+          console.log(err)
+          this.message = 'Username atau Password Salah'
+        })
+      // this.$router.push({ name: 'dashboard' })
     },
   },
 }
 </script>
 
-<style lang="scss">
+<style scoped>
+  .errormsg {
+    color: red;
+  }
 </style>

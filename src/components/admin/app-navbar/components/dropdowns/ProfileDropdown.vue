@@ -24,6 +24,14 @@
       >
         {{ $t(`user.${option.name}`) }}
       </router-link>
+      <router-link
+        class="profile-dropdon__item pt-1 pb-1 mt-2 mb-2"
+        v-if="isAuthenticated"
+        to="auth/login"
+        v-on:click.native="doLogout()" replace
+      >
+        Logout
+      </router-link>
     </div>
   </va-dropdown>
 </template>
@@ -44,11 +52,22 @@ export default {
           name: 'profile',
           redirectTo: '',
         },
-        {
-          name: 'logout',
-          redirectTo: 'login',
-        },
+        // {
+        //   name: 'logout',
+        //   redirectTo: 'login',
+        // },
       ],
+    },
+  },
+  methods: {
+    isAuthenticated () {
+      if (localStorage.getItem('user-token')) return true
+      return false
+    },
+    doLogout () {
+      // localStorage.removeItem('user-token')
+      this.$store.dispatch('auth/logout')
+      this.$router.push('/auth/login')
     },
   },
 }

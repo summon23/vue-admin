@@ -11,7 +11,7 @@ const EmptyParentComponent = {
 
 const demoRoutes = []
 
-export default new Router({
+const mainRouter = new Router({
   mode: process.env.VUE_APP_ROUTER_MODE_HISTORY === 'true' ? 'history' : 'hash',
   routes: [
     ...demoRoutes,
@@ -53,6 +53,10 @@ export default new Router({
           name: 'recover-password',
           path: 'recover-password',
           component: () => import('../components/auth/recover-password/RecoverPassword.vue'),
+        },
+        {
+          name: 'logout',
+          path: 'logout',
         },
         {
           path: '',
@@ -405,3 +409,20 @@ export default new Router({
     },
   ],
 })
+
+mainRouter.beforeEach((to, from, next) => {
+  const publicPages = [
+    '/auth/login',
+    '/auth/register',
+  ]
+  const authRequired = !publicPages.includes(to.path)
+  const loggedIn = localStorage.getItem('user-token')
+
+  if (authRequired && !loggedIn) {
+    return next('/auth/login')
+  }
+
+  next()
+})
+
+export default mainRouter
