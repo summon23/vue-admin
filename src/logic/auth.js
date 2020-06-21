@@ -1,7 +1,15 @@
 
 import { commonAPI } from '@/api/api'
+import jwt from 'jsonwebtoken'
 
 const exports = {}
+
+exports.validateToken = (token) => {
+  const dateNow = new Date()
+  const decodedToken = jwt.decode(token)
+  if (decodedToken.exp < dateNow.getTime() / 1000) return false
+  return true
+}
 
 exports.authUser = async (userdata) => {
   const { username, password } = userdata

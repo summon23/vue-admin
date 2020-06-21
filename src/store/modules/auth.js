@@ -1,4 +1,5 @@
 import AuthLogic from '../../logic/auth'
+import jwt from 'jsonwebtoken'
 
 const user = localStorage.getItem('user-token')
 
@@ -13,6 +14,7 @@ export default {
     login ({ dispatch, commit }, userdata) {
       return AuthLogic.authUser(userdata).then(
         user => {
+          console.log(user)
           commit('loginSuccess', user)
           return Promise.resolve(user)
         },
@@ -28,7 +30,11 @@ export default {
   },
   mutations: {
     loginSuccess (state) {
+      console.log(state)
       state.status.loggedIn = true
+      const decodedUser = jwt.decode(state)
+      console.log(decodedUser)
+      state.user = decodedUser
     },
     logoutSuccess (state) {
       state.status.loggedIn = false

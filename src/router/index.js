@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AuthLayout from '../components/auth/AuthLayout'
 import AppLayout from '../components/admin/AppLayout'
+import AuthLogic from '../logic/auth'
 
 Vue.use(Router)
 
@@ -28,6 +29,26 @@ const mainRouter = new Router({
           name: 'newdata',
           path: 'newdata',
           component: () => import('../components/app/FormReport.vue'),
+        },
+        {
+          name: 'list-usermanagement',
+          path: 'user',
+          component: () => import('../components/app/user/UserManagement.vue'),
+        },
+        {
+          name: 'new-usermanagent',
+          path: 'user/new',
+          component: () => import('../components/app/user/UserForm.vue'),
+        },
+        {
+          name: 'detail-usermanagement',
+          path: 'user/:id',
+          component: () => import('../components/app/user/UserDetail.vue'),
+        },
+        {
+          name: 'list-tournamentmanagement',
+          path: 'tournament',
+          component: () => import('../components/app/tournament/TournamentManagement.vue'),
         },
       ],
     },
@@ -417,6 +438,13 @@ mainRouter.beforeEach((to, from, next) => {
   ]
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user-token')
+
+  // Check Jwt Lifetime
+  if (loggedIn && !AuthLogic.validateToken(loggedIn)) {
+    console.log('EXPIRED')
+    localStorage.removeItem('user-token')
+    return next('/auth/login')
+  }
 
   if (authRequired && !loggedIn) {
     return next('/auth/login')
