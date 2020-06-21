@@ -95,6 +95,6 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="css" scoped>
 
 </style>

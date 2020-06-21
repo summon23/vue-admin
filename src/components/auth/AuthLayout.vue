@@ -14,7 +14,7 @@
             center
           >
             <va-tab>{{ $t('auth.login') }}</va-tab>
-            <va-tab>{{ $t('auth.createNewAccount') }}</va-tab>
+            <!-- <va-tab>{{ $t('auth.createNewAccount') }}</va-tab> -->
           </va-tabs>
 
           <va-separator/>
@@ -33,7 +33,7 @@ import VaIconVuestic from '../../iconset/VaIconVuestic'
 
 const tabs = [
   'login',
-  'signup',
+  // 'signup',
 ]
 
 export default {
@@ -42,7 +42,10 @@ export default {
   data () {
     return {
       selectedTabIndex: 0,
-      tabTitles: ['login', 'createNewAccount'],
+      tabTitles: [
+        'login',
+        // 'createNewAccount',
+      ],
     }
   },
   computed: {

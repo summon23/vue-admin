@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { commonAPIInstance } from '@/api/api'
+import { commonAPI } from '@/api/api'
 
 export default {
   name: 'FormReport',
@@ -37,7 +37,7 @@ export default {
         return false
       }
 
-      commonAPIInstance.post('posts', {
+      commonAPI.post('posts', {
         title: 'dummypost',
         body: this.reportName,
         userId: 1122,
