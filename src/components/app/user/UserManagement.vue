@@ -17,6 +17,21 @@
       </div>
     </div>
 
+    <va-modal
+      v-model="showDeleteModal"
+      title=" Delete User"
+      cancelClass="none"
+      okText="Delete"
+      @ok="confirmDelete"
+      message="Enter the Usernamet into the Username field to Confirm Delete Action"
+      noOutsideDismiss
+      noEscDismiss
+    >
+      <va-input
+        v-model="deleteAction.usernameToDeleteConfirmation"
+        placeholder="Enter The Username to Confirm Delete"/>
+    </va-modal>
+
     <va-data-table
       :fields="fields"
       :data="usersGridData"
@@ -42,7 +57,9 @@
 
 <script>
 import authLogic from '../../../logic/auth'
+import Service from '@/logic/user'
 import { commonAPI } from '@/api/api'
+import EventMsg from '@/event/EventMsg'
 
 export default {
   name: 'UserManagementGrid',
@@ -52,6 +69,12 @@ export default {
       totalPages: 3,
       usersGridData: [],
       loading: false,
+      showDeleteModal: false,
+      deleteAction: {
+        idToDelete: '',
+        usernameToDelete: '',
+        usernameToDeleteConfirmation: '',
+      },
     }
   },
   computed: {
@@ -83,6 +106,22 @@ export default {
     },
   },
   methods: {
+    confirmDelete () {
+      if (this.usernameToDelete !== this.usernameToDeleteConfirmation) {
+        console.log('DATA NOT VALID')
+      }
+
+      return Service.deleteUser(this.deleteAction.idToDelete)
+        .then(response => {
+          console.log('DELETE USERRRR')
+          this.usernameToDelete = ''
+          this.usernameToDeleteConfirmation = ''
+          EventMsg.$emit('NOTIFY_SUCCESS', 'User Deleted Successfull')
+        })
+        .catch(() => {
+
+        })
+    },
     getRawData (page = 1) {
       this.loading = true
 
@@ -108,6 +147,9 @@ export default {
       this.$router.push(`/app/user/${userData.id}`)
     },
     deleteForm (userData) {
+      this.deleteAction.usernameToDelete = userData.username
+      this.showDeleteModal = true
+      this.deleteAction.idToDelete = userData.id
       console.log(userData)
     },
   },

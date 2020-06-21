@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import AuthLayout from '../components/auth/AuthLayout'
 import AppLayout from '../components/admin/AppLayout'
 import AuthLogic from '../logic/auth'
+// import EventMsg from '@/event/EventMsg'
 
 Vue.use(Router)
 
@@ -449,6 +450,8 @@ mainRouter.beforeEach((to, from, next) => {
   if (authRequired && !loggedIn) {
     return next('/auth/login')
   }
+
+  // EventMsg.$emit('CLEAR', {})
 
   next()
 })

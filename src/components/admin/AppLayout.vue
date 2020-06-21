@@ -29,6 +29,22 @@
           slot="content"
           role="main"
         >
+          <!-- Global Notification -->
+          <va-notification :closeable="true" v-model="successMsgFlg">
+            <va-badge>
+              Success
+            </va-badge>
+            {{successMsg}}
+          </va-notification>
+
+          <va-notification color="danger" :closeable="true" v-model="errorMsgFlg">
+            <va-badge color="danger">
+              Error
+            </va-badge>
+            {{errorMsg}}
+          </va-notification>
+          <br>
+
           <router-view/>
         </main>
       </div>
@@ -46,6 +62,7 @@ import {
   ColorThemeActionsMixin,
   ColorThemeMixin,
 } from '../../services/vuestic-ui'
+import EventMsg from '@/event/EventMsg'
 
 export default {
   name: 'app-layout',
@@ -60,6 +77,10 @@ export default {
       isTopBar: false,
       minimized: false,
       mobileWidth: 767,
+      successMsgFlg: false,
+      successMsg: '',
+      errorMsgFlg: false,
+      errorMsg: '',
     }
   },
   inject: ['contextConfig'],
@@ -81,6 +102,40 @@ export default {
         this.contextConfig[key] = theme.context[key]
       })
     },
+    clearMsg () {
+      setTimeout(() => {
+        this.successMsgFlg = false
+        this.successMsg = ''
+        this.errorMsgFlg = false
+        this.errorMsg = ''
+        console.log('CLEAR')
+      }, 5000)
+    },
+  },
+  mounted () {
+    EventMsg.$on('NOTIFY_SUCCESS', (payload) => {
+      console.log(payload)
+      this.successMsgFlg = true
+      this.successMsg = payload
+
+      this.clearMsg()
+    })
+
+    EventMsg.$on('NOTIFY_ERROR', (payload) => {
+      console.log(payload)
+      this.errorMsgFlg = true
+      this.errorMsg = payload
+
+      this.clearMsg()
+    })
+
+    EventMsg.$on('CLEAR', (payload) => {
+      console.log(payload)
+      this.successMsgFlg = false
+      this.successMsg = ''
+      this.errorMsgFlg = false
+      this.errorMsg = ''
+    })
   },
 }
 </script>

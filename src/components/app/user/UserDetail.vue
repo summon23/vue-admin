@@ -70,6 +70,7 @@
 <script>
 // import { commonAPI } from '@/api/api'
 import userService from '../../../logic/user'
+import EventMsg from '@/event/EventMsg'
 
 export default {
   name: 'UserDetail',
@@ -102,6 +103,7 @@ export default {
       return userService.updateUserData(this.userForm)
         .then(response => {
           console.log(response)
+          EventMsg.$emit('NOTIFY_SUCCESS', 'User Updated Successfull')
           this.$router.push('/app/user')
         })
         .catch(err => {
